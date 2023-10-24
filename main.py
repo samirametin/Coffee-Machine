@@ -2,14 +2,16 @@ from databasa import MENU
 from databasa import resources
 from math import *
 
-order = input("What would you like? (espresso/latte/cappuccino): ")
-
 
 def checking_resources(coffe_name):
-    necessary_ingredients = MENU[coffe_name]["ingredients"]
-    remainig_water = resources["water"]
-    remaining_milk = resources["milk"]
-    remaining_coffee = resources["coffee"]
+    ingredients = MENU[coffe_name]["ingredients"]
+    for item in ingredients:
+        if resources[item] < ingredients[item]:
+            print(f"Sorry there is not enough {item}")
+        else:
+            resources[item] -= ingredients[item]
+
+
 
 def getting_coins():
     print("Please insert coins.")
@@ -25,14 +27,23 @@ def checking_price(money,coffee_name):
     coffee_price = MENU[coffee_name]["cost"]
     if money >= coffee_price:
         change = round(money - coffee_price, 2)
-        return f"Here is ${change} change."
+
+        return f"Here is ${change} change.\nHere is your {coffee_name}! Enjoy!"
     else:
         return "Sorry that's not enough money. Money refunded."
 
 
+budget = 0
+def coffe_machine():
+    order = input("What would you like? (espresso/latte/cappuccino): ")
+    if order == "report":
+        print(f"Water: {resources['water']}ml")
+        print(f"Milk: {resources['milk']}ml")
+        print(f"Coffee: {resources['coffee']}gr")
+        print(f"Money: ${budget}")
+    checking_resources(order)
+    your_money = getting_coins()
 
-your_money = getting_coins()
-
-money_procces = checking_price(your_money, order)
-print(your_money)
-print(money_procces)
+    money_procces = checking_price(your_money, order)
+    print(your_money)
+    print(money_procces)
